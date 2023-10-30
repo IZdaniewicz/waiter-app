@@ -5,7 +5,7 @@ import com.example.demo.User.Entity.User;
 import com.example.demo.User.Entity.UsersBasicInfo;
 import com.example.demo.User.Repository.UsersBasicInfoRepository;
 import com.example.demo.User.Request.UsersBasicInfoModifyRequest;
-import com.example.demo.User.Service.UsersService;
+import com.example.demo.User.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,12 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class UserController {
 
 
     private final UsersBasicInfoRepository usersBasicInfoRepository;
-    private final UsersService usersService;
+    private final UserService usersService;
 
     @GetMapping("/user/{userId}")
     @CrossOrigin(origins = "http://localhost:3000")
@@ -30,7 +31,7 @@ public class UserController {
         Map<String, String> map = new HashMap<>();
         UsersBasicInfo userInfo = usersBasicInfoRepository.findByUserId(userId);
 
-        map.put("name", userInfo.getName());
+        map.put("firstname", userInfo.getFirstname());
         map.put("surname", userInfo.getSurname());
 
         return ResponseEntity.ok(map);
@@ -38,14 +39,14 @@ public class UserController {
 
     @GetMapping("/user/currentUser")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<Map<String,String>> getCurrentUserInfo(HttpServletRequest request)
-    {
-        User user = usersService.getLoggedUser(request);
+    public ResponseEntity<Map<String, String>> getCurrentUserInfo(HttpServletRequest request) {
+        User user = usersService.getLoggedUser();
+
         Map<String, String> map = new HashMap<>();
         UsersBasicInfo userInfo = usersBasicInfoRepository.findByUserId(user.getId());
 
-        map.put("username",user.getUsername());
-        map.put("name", userInfo.getName());
+        map.put("username", user.getUsername());
+        map.put("firstname", userInfo.getFirstname());
         map.put("surname", userInfo.getSurname());
 
         return ResponseEntity.ok(map);
@@ -62,7 +63,7 @@ public class UserController {
             }
 
             if (request.getName() != null) {
-                usersBasicInfo.setName(request.getName());
+                usersBasicInfo.setFirstname(request.getName());
             }
             if (request.getSurname() != null) {
                 usersBasicInfo.setSurname(request.getSurname());

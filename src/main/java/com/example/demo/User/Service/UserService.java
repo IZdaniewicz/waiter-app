@@ -1,26 +1,27 @@
 package com.example.demo.User.Service;
 
-import com.example.demo.Auth.Token.Repository.TokenRepository;
 import com.example.demo.Config.Service.JwtService;
 import com.example.demo.User.Entity.User;
 import com.example.demo.User.Repository.UserRepository;
-import com.example.demo.User.Repository.UsersBasicInfoRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
-public class UsersService {
+public class UserService {
 
-    private UsersBasicInfoRepository usersBasicInfoRepository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    private final TokenRepository tokenRepository;
 
-    public User getLoggedUser(HttpServletRequest request) {
+
+    public User getLoggedUser() {
+
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

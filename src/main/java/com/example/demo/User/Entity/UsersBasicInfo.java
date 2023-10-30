@@ -16,10 +16,13 @@ public class UsersBasicInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
     @Column(name = "name")
-    private String name;
+    private String firstname;
+
     @Column(name = "surname")
     private String surname;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

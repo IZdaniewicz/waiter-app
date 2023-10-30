@@ -9,7 +9,6 @@ import com.example.demo.Auth.Token.Repository.TokenRepository;
 import com.example.demo.Config.Service.JwtService;
 import com.example.demo.User.Entity.User;
 import com.example.demo.User.Entity.UsersBasicInfo;
-import com.example.demo.User.Enum.Role;
 import com.example.demo.User.Repository.UserRepository;
 import com.example.demo.User.Repository.UsersBasicInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,14 +37,13 @@ public class AuthenticationService {
                 .builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
                 .build();
-        user.setRole(Role.USER);
+
         userRepository.save(user);
 
         UsersBasicInfo ubi = UsersBasicInfo
                 .builder()
-                .name(request.getName())
+                .firstname(request.getFirstname())
                 .surname(request.getSurname())
                 .user(user)
                 .build();
@@ -65,12 +63,15 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
+
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
                 () -> new CredentialNotFoundException("Given credentials doesn't match any user")
         );
+
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
+
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
