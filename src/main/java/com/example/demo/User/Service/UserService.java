@@ -1,6 +1,8 @@
 package com.example.demo.User.Service;
 
 import com.example.demo.Config.Service.JwtService;
+import com.example.demo.Permission.Entity.Permission;
+import com.example.demo.Role.Entity.Role;
 import com.example.demo.User.Entity.User;
 import com.example.demo.User.Repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,4 +35,8 @@ public class UserService {
         );
     }
 
+    public boolean hasPermission(User user, Permission permission) {
+        Role role = user.getRole();
+        return role.getPermissions().contains(permission);
+    }
 }

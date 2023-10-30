@@ -52,6 +52,14 @@ public class User implements UserDetails {
         this.usersBasicInfo = usersBasicInfo;
     }
 
+    public Role getRole() {
+        return this.role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.getName()));
