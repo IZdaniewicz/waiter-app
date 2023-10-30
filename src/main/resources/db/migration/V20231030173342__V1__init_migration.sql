@@ -1,8 +1,14 @@
+CREATE TABLE IF NOT EXISTS roles (
+                                     id SERIAL PRIMARY KEY,
+                                     name VARCHAR(255)
+);
+
 CREATE TABLE IF NOT EXISTS users (
                        id SERIAL PRIMARY KEY,
                        username VARCHAR(255) NOT NULL,
                        password VARCHAR(255) NOT NULL,
-                       role VARCHAR(255) NOT NULL
+                       role_id INTEGER,
+                       FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
 CREATE TABLE IF NOT EXISTS users_basic_info (

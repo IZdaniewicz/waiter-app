@@ -1,6 +1,6 @@
 package com.example.demo.User.Entity;
 
-import com.example.demo.User.Enum.Role;
+import com.example.demo.Role.Entity.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,12 +24,15 @@ public class User implements UserDetails {
     private Integer id;
     @Column(name = "username", nullable = false)
     private String username;
+
     @Column(name = "password", nullable = false)
     private String password;
+
     @OneToOne(mappedBy = "user")
     private UsersBasicInfo usersBasicInfo;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
 
@@ -49,18 +52,9 @@ public class User implements UserDetails {
         this.usersBasicInfo = usersBasicInfo;
     }
 
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(role.getName()));
     }
 
     public String getPassword() {
